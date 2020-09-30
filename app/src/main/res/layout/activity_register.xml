@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".register.RegisterActivity">
 
     <TextView
         android:layout_width="241dp"
         android:layout_height="70dp"
         android:gravity="center"
-        android:text="Message GUI"
+        android:text="Register GUI"
         android:textStyle="bold"
         android:textSize="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,7 +22,7 @@
 
 
     <EditText
-        android:id="@+id/usernameID"
+        android:id="@+id/usernameRegisterID"
         android:layout_width="322dp"
         android:layout_height="63dp"
         android:gravity="center"
@@ -36,7 +36,7 @@
         app:layout_constraintVertical_bias="0.282" />
 
     <EditText
-        android:id="@+id/passwordID"
+        android:id="@+id/passwordRegisterID"
         android:layout_width="322dp"
         android:layout_height="63dp"
         android:gravity="center"
@@ -50,11 +50,12 @@
         app:layout_constraintVertical_bias="0.465" />
 
     <Button
-        android:id="@+id/loginID"
+        android:id="@+id/registerCreateID"
         android:layout_width="171dp"
         android:layout_height="65dp"
         android:textSize="30dp"
-        android:text="Login"
+        android:text="register"
+        android:onClick="onRegisterCreateClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,11 +64,11 @@
 
     <Button
         android:id="@+id/registerID"
-        android:layout_width="129dp"
-        android:layout_height="55dp"
-        android:text="Register"
-        android:textSize="20dp"
-        android:onClick="onRegisterClick"
+        android:layout_width="275dp"
+        android:layout_height="46dp"
+        android:onClick="onAlreadyHaveAccountClick"
+        android:text="Already have an account?"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
