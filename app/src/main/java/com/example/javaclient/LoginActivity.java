@@ -8,11 +8,15 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.javaclient.register.RegisterActivity;
+import com.example.javaclient.utils.Client;
+import com.example.javaclient.utils.Flags;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
-    public EditText usernameEdit, passwordEdit;
-    public Intent intent;
+    private Client client;
+
+    private EditText usernameEdit, passwordEdit;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +25,11 @@ public class MainActivity extends AppCompatActivity {
 
         usernameEdit = findViewById(R.id.usernameID);
         passwordEdit = findViewById(R.id.passwordID);
+        client = new Client("localhost");
     }
 
     public void onRegisterClick(View view) {
         intent = new Intent(this, RegisterActivity.class);
-
 
         startActivity(intent);
     }
