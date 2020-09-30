@@ -6,13 +6,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.javaclient.LoginActivity;
 import com.example.javaclient.R;
+import com.example.javaclient.utils.Client;
+import com.example.javaclient.utils.Flags;
+import com.example.javaclient.utils.ResponseFormat;
+import com.example.javaclient.utils.Status;
 
 public class RegisterActivity extends AppCompatActivity {
 
     public EditText usernameEdit, passwordEdit;
+    public Client client;
     public Intent intent;
 
     @Override
@@ -30,9 +36,15 @@ public class RegisterActivity extends AppCompatActivity {
         String username = usernameEdit.getText().toString();
         String password = passwordEdit.getText().toString();
 
-
-
-        startActivity(intent);
+        client = new Client("127.0.0.1");
+        new Thread(client).start();
+//        ResponseFormat response = client.ExecCommand(Flags.REGISTER, username + " " + password);
+//        if(response.status.equals(Status.OK)) {
+//            Toast.makeText(this, "User created!", Toast.LENGTH_SHORT);
+//            startActivity(intent);
+//        } else {
+//            Toast.makeText(this, "Error: " + response.status.name(), Toast.LENGTH_SHORT);
+//        }
     }
 
     //Move to the login screen

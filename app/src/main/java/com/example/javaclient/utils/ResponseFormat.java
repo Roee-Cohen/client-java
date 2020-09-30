@@ -1,7 +1,5 @@
 package com.example.javaclient.utils;
 
-import com.utils.Status;
-
 public class ResponseFormat {
 
     public Status status;

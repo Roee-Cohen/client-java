@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.EditText;
 
@@ -25,12 +26,13 @@ public class LoginActivity extends AppCompatActivity {
 
         usernameEdit = findViewById(R.id.usernameID);
         passwordEdit = findViewById(R.id.passwordID);
-        client = new Client("localhost");
+        client = new Client("0.0.0.0");
     }
 
     public void onRegisterClick(View view) {
         intent = new Intent(this, RegisterActivity.class);
 
+//        intent.putExtra("client", (Parcelable) client);
         startActivity(intent);
     }
 }

@@ -1,19 +1,23 @@
 package com.example.javaclient.utils;// A Java program for a Client
 
+import android.os.AsyncTask;
+
 import com.google.gson.Gson;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.security.NoSuchAlgorithmException;
 
-public class Client
+public class Client implements Runnable
 {
     // initialize socket and input output streams
-    static int PORT = 9999;
+    static int PORT = 7800;
     private Socket socket;
+    private String address;
     private DataOutputStream outStream;
     private DataInputStream inStream;
     private Gson g;
@@ -21,7 +25,6 @@ public class Client
     // constructor to put ip address and port
     public Client(String address)
     {
-        // establish a connection
         try
         {
             this.socket = new Socket(address, PORT);
@@ -39,7 +42,6 @@ public class Client
         {
             System.out.println(i);
             System.out.println("Can not reach the server");
-            System.exit(0);
         }
     }
 
@@ -132,8 +134,8 @@ public class Client
         return this.g.toJson(u);
     }
 
-    public static void main(String args[])
-    {
-        new Client("127.0.0.1");
+    @Override
+    public void run() {
+        ExecCommand(Flags.REGISTER, "test test");
     }
 }
