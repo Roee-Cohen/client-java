@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.security.NoSuchAlgorithmException;
 
-public class Client implements Runnable
+public class Client
 {
     // initialize socket and input output streams
     static int PORT = 7800;
@@ -25,6 +25,8 @@ public class Client implements Runnable
     // constructor to put ip address and port
     public Client(String address)
     {
+        this.address = address;
+
         try
         {
             this.socket = new Socket(address, PORT);
@@ -45,6 +47,7 @@ public class Client implements Runnable
         }
     }
 
+
     private void closeSocket(String msg){
 
         System.out.println(msg);
@@ -64,7 +67,7 @@ public class Client implements Runnable
 
     public ResponseFormat ExecCommand(Flags command, String data){
 
-        if (command.equals(Flags.CREATE))
+        if (command.equals(Flags.CREATE) || command.equals(Flags.REGISTER))
             return createUser(data);
         if (command.equals(Flags.LOGIN))
             return Login(data);
@@ -105,15 +108,7 @@ public class Client implements Runnable
             this.outStream.writeUTF(request);
             String response = this.inStream.readUTF();
             ResponseFormat res = this.g.fromJson(response, ResponseFormat.class);
-
             return res;
-//            if (res.status.equals(Status.OK)){
-//                System.out.println(res.data);
-//            }
-//            else{
-//                System.out.println("error occurred when trying to logged in");
-//            }
-
         }
         catch (SocketException i) { this.closeSocket("Server forced to shutdown"); }
         catch (IOException e) { e.printStackTrace(); }
@@ -132,10 +127,5 @@ public class Client implements Runnable
 
         User u = new User(username, encryptedPass);
         return this.g.toJson(u);
-    }
-
-    @Override
-    public void run() {
-        ExecCommand(Flags.REGISTER, "test test");
     }
 }

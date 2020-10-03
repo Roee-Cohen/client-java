@@ -3,7 +3,9 @@ package com.example.javaclient.register;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -11,15 +13,18 @@ import android.widget.Toast;
 import com.example.javaclient.LoginActivity;
 import com.example.javaclient.R;
 import com.example.javaclient.utils.Client;
+import com.example.javaclient.utils.ClientHandler;
 import com.example.javaclient.utils.Flags;
 import com.example.javaclient.utils.ResponseFormat;
 import com.example.javaclient.utils.Status;
 
+import java.util.concurrent.ExecutionException;
+
 public class RegisterActivity extends AppCompatActivity {
 
     public EditText usernameEdit, passwordEdit;
-    public Client client;
     public Intent intent;
+    public AsyncTask<String,Void,ResponseFormat> clientHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +37,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     //Create an account and move to the login screen
-    public void onRegisterCreateClick(View view) {
+    public void onRegisterCreateClick(View view) throws ExecutionException, InterruptedException {
         String username = usernameEdit.getText().toString();
         String password = passwordEdit.getText().toString();
 
-        client = new Client("127.0.0.1");
-        new Thread(client).start();
-//        ResponseFormat response = client.ExecCommand(Flags.REGISTER, username + " " + password);
-//        if(response.status.equals(Status.OK)) {
-//            Toast.makeText(this, "User created!", Toast.LENGTH_SHORT);
-//            startActivity(intent);
-//        } else {
-//            Toast.makeText(this, "Error: " + response.status.name(), Toast.LENGTH_SHORT);
-//        }
+        String[] args = {Flags.REGISTER.name(), username + " " + password};
+        clientHandler = new ClientHandler(this,LoginActivity.URL_ADDRESS);
+        clientHandler.execute(args);
     }
 
     //Move to the login screen
