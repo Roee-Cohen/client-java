@@ -1,5 +1,6 @@
 package com.example.javaclient.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -10,10 +11,12 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
     private Client client;
     private Context context;
     private Flags currentFlag;
+    private boolean closeAfterUsage;
 
-    public ClientHandler(Context context, String address) {
+    public ClientHandler(Context context, String address, boolean closeAfterUsage) {
         this.address = address;
         this.context = context;
+        this.closeAfterUsage = closeAfterUsage;
         client = null;
     }
 
@@ -32,6 +35,7 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
         com.example.javaclient.utils.Status status = response.status;
         if(status.equals(com.example.javaclient.utils.Status.OK)) {
             Toast.makeText(context, currentFlag.getMessage(), Toast.LENGTH_SHORT).show();
+            if(closeAfterUsage) ((Activity) context).finish();
         } else if(status.equals(com.example.javaclient.utils.Status.NOTFOUND)) {
             Toast.makeText(context, "Not found the one you looking for", Toast.LENGTH_SHORT).show();
         } else {

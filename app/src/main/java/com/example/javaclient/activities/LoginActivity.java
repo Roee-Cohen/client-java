@@ -1,26 +1,22 @@
-package com.example.javaclient;
+package com.example.javaclient.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.javaclient.register.RegisterActivity;
-import com.example.javaclient.utils.Client;
+import com.example.javaclient.R;
+import com.example.javaclient.activities.RegisterActivity;
 import com.example.javaclient.utils.ClientHandler;
 import com.example.javaclient.utils.Flags;
 import com.example.javaclient.utils.ResponseFormat;
-import com.example.javaclient.utils.Status;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends FragmentActivity {
     //10.0.2.2
-
-    public static final String URL_ADDRESS = "10.0.2.2";
 
     private AsyncTask<String,Void,ResponseFormat> clientHandler;
     private EditText usernameEdit, passwordEdit;
@@ -31,16 +27,17 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        usernameEdit = findViewById(R.id.usernameID);
-        passwordEdit = findViewById(R.id.passwordID);
+        usernameEdit = findViewById(R.id.edtUsername);
+        passwordEdit = findViewById(R.id.edtPassLogin);
     }
 
     public void onLoginClick(View view) {
+        String URL_ADDRESS = getResources().getString(R.string.LOCALHOST_IP);
         final String username = usernameEdit.getText().toString();
         final String password = passwordEdit.getText().toString();
 
         String[] args = {Flags.LOGIN.name(), username + " " + password};
-        clientHandler = new ClientHandler(this,URL_ADDRESS);
+        clientHandler = new ClientHandler(this,URL_ADDRESS, false);
         clientHandler.execute(args);
     }
 
