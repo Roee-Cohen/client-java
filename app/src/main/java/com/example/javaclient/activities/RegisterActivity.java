@@ -17,7 +17,7 @@ import com.example.javaclient.utils.ResponseFormat;
 
 import java.util.concurrent.ExecutionException;
 
-public class RegisterActivity extends FragmentActivity {
+public class RegisterActivity extends AppCompatActivity {
 
     public EditText usernameEdit, passwordEdit, passwordConfirmEdit;
     public Intent intent;
@@ -43,7 +43,7 @@ public class RegisterActivity extends FragmentActivity {
 
         if(password.equals(passwordConfirm)) {
             String[] args = {Flags.REGISTER.name(), username + " " + password};
-            clientHandler = new ClientHandler(this, URL_ADDRESS, true);
+            clientHandler = new ClientHandler(this, URL_ADDRESS);
             clientHandler.execute(args);
         } else {
             Toast.makeText(this, "Passwords don't match!", Toast.LENGTH_SHORT).show();
