@@ -4,6 +4,7 @@ public enum Status{
     OK(201),
     UNAUTHORIZED(401),
     FORBIDDEN(403),
+    BAD_REQUEST(402),
     NOTFOUND(404);
 
     private int status;

@@ -1,13 +1,15 @@
 package com.example.javaclient.utils;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String username;
     private String password;
 
-    public User(String username, String passowrd){
+    public User(String username, String password){
         this.username = username;
-        this.password = passowrd;
+        this.password = password;
     }
 
     public String getUsername() {
