@@ -7,7 +7,8 @@ public enum Flags {
     DELETE("Data has been deleted!"),
     SHUTDOWN("Shutdown!"),
     LOGIN("You have logged in!"),
-    REGISTER("User has been registered!");
+    REGISTER("User has been registered!"),
+    MESSAGE(" Message has been sent!");
 
     private String message;
 

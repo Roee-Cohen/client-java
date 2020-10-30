@@ -47,6 +47,14 @@ public class Client
         }
     }
 
+    public Gson getG() {
+        return g;
+    }
+
+    public DataInputStream getInputStream() {
+        return this.inStream;
+    }
+
 
     private void closeSocket(String msg){
 
@@ -67,11 +75,26 @@ public class Client
 
     public ResponseFormat ExecCommand(Flags command, String data){
 
+        if(command.equals(Flags.MESSAGE)) {
+            return message(data);
+        }
         if (command.equals(Flags.CREATE) || command.equals(Flags.REGISTER))
             return createUser(data);
         if (command.equals(Flags.LOGIN))
             return Login(data);
 
+        return null;
+    }
+
+    private ResponseFormat message(String data) {
+        ResponseFormat response;
+        try {
+            this.outStream.writeUTF(data);
+            response = new ResponseFormat(Status.OK, this.inStream.readUTF());
+            return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

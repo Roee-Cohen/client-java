@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -23,8 +24,9 @@ import com.example.javaclient.utils.ResponseFormat;
 public class LoginActivity extends AppCompatActivity {
     //10.0.2.2
 
+    public static AsyncTask<String,Void,ResponseFormat> clientHandler;
+
     private String URL_ADDRESS;
-    private AsyncTask<String,Void,ResponseFormat> clientHandler;
     private SharedPreferences storage;
     private EditText usernameEdit, passwordEdit;
     private CheckBox rememberMeBox;
