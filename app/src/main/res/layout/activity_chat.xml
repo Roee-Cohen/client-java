@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context=".activities.ChatActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linearlayoutBotomChat" />
+
+
+    <LinearLayout
+        android:id="@+id/linearlayoutBotomChat"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <com.example.javaclient.utils.CircleImageView
+            android:id="@+id/imgSend"
+            android:rotation="180"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/send"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
+
+
+        <EditText
+            android:id="@+id/edtMessage"
+            android:singleLine="true"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:background="@drawable/shape_editext"
+            android:gravity="right|center_vertical"
+            android:hint="Enter a new message"
+            android:padding="9dp" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">JavaClient</string>
-    <string name="LOCALHOST_IP">10.0.2.2</string>
+    <string name="LOCALHOST_IP">192.168.14.170</string>
 </resources>
