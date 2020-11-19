@@ -88,9 +88,11 @@ public class Client
 
     private ResponseFormat message(String data) {
         ResponseFormat response;
+        String test;
         try {
             this.outStream.writeUTF(data);
-            response = new ResponseFormat(Status.OK, this.inStream.readUTF());
+            test = this.inStream.readUTF();
+            response = new ResponseFormat(Status.OK, test);
             return response;
         } catch (IOException e) {
             e.printStackTrace();
