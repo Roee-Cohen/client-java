@@ -6,6 +6,7 @@
 
     <color name="colorText">#1D5520</color>
     <color name="colorBackground">#3BC352</color>
+    <color name="colordisconnected">#C50424</color>
     <color name="colorBackgroundItem">#CFD3CF</color>
     <color name="colorWhite">#fff</color>
 </resources>

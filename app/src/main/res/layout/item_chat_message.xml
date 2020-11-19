@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlChat"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="@color/colorWhite"
+        android:text="Sagi gotteiner test name for chat"
+        android:textSize="18sp" />
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutContainerBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtName"
+        android:background="@drawable/shape_editext"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/txtMessageBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Message body example"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:elevation="3dp"
+        android:id="@+id/txtTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+         android:text="10:45"
+        android:textColor="@color/colorWhite"
+        android:textSize="10sp" />
+
+</RelativeLayout>

@@ -19,4 +19,11 @@ public class MessagePacket {
         this.roomID = roomID;
     }
 
+    public String getSender() {
+        return sender;
+    }
+
+    public String getContent() {
+        return content;
+    }
 }
