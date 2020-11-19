@@ -11,6 +11,9 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.example.javaclient.activities.MainScreenActivity;
+import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,25 +44,37 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
     public void startListening(final Context activity) {
         messageThread = new Thread(new Runnable() {
 
-            String response;
+            MessagePacket response;
+            String jsonBody;
             Handler handler = new Handler();
             @Override
             public void run() {
-                synchronized (this) {
+                while(true) {
                     try {
-                        response = client.getInputStream().readUTF();
-                        if(response.length() > 0)
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                AlertDialog dialog = new AlertDialog.Builder(activity)
-                                        .setTitle("Message")
-                                        .setMessage(response)
-                                        .setPositiveButton("OK", null).show();
-                                Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        Thread.sleep(1000);
+                        try {
+                            jsonBody = client.getInputStream().readUTF();
+                            System.out.println("BODY JSON!!!!!: " + jsonBody);
+                            try {
+                                response = client.getG().fromJson(jsonBody, MessagePacket.class);
+                                if(response != null && response.content != null && response.content != "null")
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            AlertDialog dialog = new AlertDialog.Builder(activity)
+                                                    .setTitle("Message")
+                                                    .setMessage(response.content)
+                                                    .setPositiveButton("OK", null).show();
+                                            Toast.makeText(context, response.content, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }, 500);
+                            } catch(JsonSyntaxException e) {
+                                System.out.println("JSON BODY: GOT SOMETHING else!!!");
                             }
-                        }, 500);
-                    } catch (IOException e) {
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -82,13 +97,7 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
                     requestFormat = new RequestFormat(Flags.MESSAGE, client.getG().toJson(messagePacket));
                     responseFormat = client.ExecCommand(Flags.MESSAGE, client.getG().toJson(requestFormat));
                     System.out.println(client.getG().toJson(messagePacket) + "");
-                    if(responseFormat != null) {
-                        if(responseFormat.status.equals(com.example.javaclient.utils.Status.OK)) {
-                            Toast.makeText(context, "Message has been broadcasted!", Toast.LENGTH_SHORT);
-                        }
-
-                        sendingThread.stop();
-                    }
+                    System.out.println("Data: " + responseFormat.data);
                 }
              }
         });
