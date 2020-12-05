@@ -36,6 +36,10 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
         client = null;
     }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     public void stopListening() {
         if(messageThread != null)
             messageThread.stop();
@@ -62,7 +66,7 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
                                         @Override
                                         public void run() {
                                             AlertDialog dialog = new AlertDialog.Builder(activity)
-                                                    .setTitle("Message")
+                                                    .setTitle("Broadcast")
                                                     .setMessage(response.content)
                                                     .setPositiveButton("OK", null).show();
                                             Toast.makeText(context, response.content, Toast.LENGTH_SHORT).show();

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "572922741308",
+    "firebase_url": "https://client-chat-fb31d.firebaseio.com",
+    "project_id": "client-chat-fb31d",
+    "storage_bucket": "client-chat-fb31d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572922741308:android:1cc473d41c25388e087939",
+        "android_client_info": {
+          "package_name": "com.example.javaclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572922741308-51217d04qkhrl2752j1k4o8h6u6dhaom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_rcKRDLmy46Y5U91rRsmhzsJeP9N0rfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572922741308-51217d04qkhrl2752j1k4o8h6u6dhaom.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

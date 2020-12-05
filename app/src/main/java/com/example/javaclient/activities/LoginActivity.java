@@ -60,8 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         rememberMeBox.setChecked(storage.getBoolean("remember_me", false));
-//        if(rememberMeBox.isChecked()) {
-        if(false) {
+        if(rememberMeBox.isChecked()) {
             String username = storage.getString("username", "");
             String password = storage.getString("password", "");
             commitLogin(username, password);
