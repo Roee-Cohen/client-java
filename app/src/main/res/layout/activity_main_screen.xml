@@ -30,6 +30,18 @@
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/txt1">
 
+
+            <com.example.javaclient.utils.CircleImageView
+                android:id="@+id/imgProfileBtn"
+                android:onClick="onProfileImgChange"
+                android:layout_width="39dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="238dp"
+                android:layout_marginBottom="0dp"
+                android:src="@drawable/profile" />
+
             <ImageView
                 android:id="@+id/imgMainScreenMenu"
                 android:layout_width="wrap_content"

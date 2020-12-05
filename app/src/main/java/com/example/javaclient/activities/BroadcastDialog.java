@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -38,5 +39,7 @@ class BroadcastDialog extends Dialog {
 
     private void sendBroadcast(String message) {
         //TODO send broadcast
+        MainScreenActivity.clientHandler.sendMessage(message);
+        Toast.makeText(getContext(),"asdasda", Toast.LENGTH_SHORT).show();
     }
 }
