@@ -135,7 +135,6 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
                     requestFormat = new RequestFormat(Commends.MESSAGE, client.getGson().toJson(messagePacket));
                     responseFormat = client.execCommand(Commends.MESSAGE, client.getGson().toJson(requestFormat));
                     System.out.println(client.getGson().toJson(messagePacket) + "");
-//                    System.out.println("Data: " + responseFormat.data);
                 }
             }
         });
