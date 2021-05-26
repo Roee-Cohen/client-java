@@ -5,7 +5,7 @@
     <item android:id="@+id/itemBroadcast"
         android:title="Broadcast" />
 
-    <item android:id="@+id/itemQuit"
-        android:title="Quit" />
+    <item android:id="@+id/itemNewChat"
+        android:title="New Chat" />
 
 </menu>

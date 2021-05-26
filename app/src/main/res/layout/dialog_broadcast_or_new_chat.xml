@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="80dp"
     android:orientation="horizontal"
     android:padding="5dp">
 
     <ImageView
-        android:id="@+id/imgSendBroadcast"
+        android:id="@+id/imgSendBroadcastOrNewChat"
         android:layout_width="30dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -14,9 +14,9 @@
         android:src="@drawable/send"/>
 
     <EditText
-        android:id="@+id/edtMessageBroadcast"
+        android:id="@+id/edtMessageBroadcastOrNewChatName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/imgSendBroadcast"/>
+        android:layout_toRightOf="@+id/imgSendBroadcastOrNewChat"/>
 
 </RelativeLayout>

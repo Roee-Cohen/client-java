@@ -1,62 +1,60 @@
 package com.example.javaclient.utils;// A Java program for a Client
 
-import android.os.AsyncTask;
-
 import com.google.gson.Gson;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.security.NoSuchAlgorithmException;
 
-public class Client
-{
+public class Client {
     // initialize socket and input output streams
+    private final String SERVER_IP = "192.168.14.84";
     static int PORT = 7800;
     private Socket socket;
-    private String address;
     private DataOutputStream outStream;
     private DataInputStream inStream;
-    private Gson g;
+    private Gson gson;
+    private static Client client = null;
 
     // constructor to put ip address and port
-    public Client(String address)
-    {
-        this.address = address;
-
-        try
-        {
-            this.socket = new Socket(address, PORT);
+    private Client() {
+        try {
+            socket = new Socket(SERVER_IP, PORT);
             System.out.println("Connected...");
 
             // receive from the socket
-            this.inStream = new DataInputStream(new BufferedInputStream(this.socket.getInputStream()));
+            inStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 
             // sends to the socket
-            this.outStream = new DataOutputStream(this.socket.getOutputStream());
+            outStream = new DataOutputStream(socket.getOutputStream());
 
-            this.g = new Gson();
-        }
-        catch(IOException i)
-        {
+            gson = new Gson();
+        } catch (IOException i) {
             System.out.println(i);
             System.out.println("Can not reach the server");
         }
     }
 
-    public Gson getG() {
-        return g;
+    public static Client getInstance() {
+        if (client == null) {
+            client = new Client();
+        }
+        return client;
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 
     public DataInputStream getInputStream() {
         return this.inStream;
     }
 
-
-    private void closeSocket(String msg){
+    private void closeSocket(String msg) {
 
         System.out.println(msg);
         System.out.println("Closing Connection...");
@@ -65,90 +63,107 @@ public class Client
             this.socket.close();
             this.outStream.close();
             this.inStream.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         System.exit(0);
     }
 
-    public ResponseFormat ExecCommand(Flags command, String data){
+    public ResponseFormat execCommand(Commends command, String data) {
 
-        if(command.equals(Flags.MESSAGE)) {
-            return message(data);
-        }
-        if (command.equals(Flags.CREATE) || command.equals(Flags.REGISTER))
+        if (command.equals(Commends.MESSAGE))
+            message(data);
+        if (command.equals(Commends.CREATE) || command.equals(Commends.REGISTER))
             return createUser(data);
-        if (command.equals(Flags.LOGIN))
-            return Login(data);
+        if (command.equals(Commends.LOGIN))
+            return login(data);
+        if (command.equals(Commends.LOAD_MESSAGES))
+            getChatMessages(data);
 
         return null;
     }
 
-    private ResponseFormat message(String data) {
-        ResponseFormat response;
+    private void getChatMessages(String data) {
+
+        RequestFormat req = new RequestFormat(Commends.LOAD_MESSAGES, data);
+        String request = gson.toJson(req);
+
         try {
-            this.outStream.writeUTF(data);
-            response = new ResponseFormat(Status.OK, this.inStream.readUTF());
-            return response;
+            this.outStream.writeUTF(request);
+        } catch (SocketException i) {
+            this.closeSocket("Server forced to shutdown");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
-    private ResponseFormat createUser(String data){
+    private void message(String data) {
+        try {
+            outStream.writeUTF(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ResponseFormat createUser(String data) {
 
         // get user
-        String user = this.userJsonFromString(data);
+        String user = userJsonFromString(data);
 
-        RequestFormat req = new RequestFormat(Flags.CREATE, user);
-        String request = this.g.toJson(req);
+        RequestFormat req = new RequestFormat(Commends.CREATE, user);
+        String request = gson.toJson(req);
 
         try {
             this.outStream.writeUTF(request);
-            String response = this.inStream.readUTF();
-            ResponseFormat res = this.g.fromJson(response, ResponseFormat.class);
+            String response = inStream.readUTF();
+            ResponseFormat res = gson.fromJson(response, ResponseFormat.class);
 
             return res;
+        } catch (SocketException i) {
+            this.closeSocket("Server forced to shutdown");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (SocketException i) { this.closeSocket("Server forced to shutdown"); }
-        catch (IOException e) { e.printStackTrace(); }
 
         return null;
     }
 
-    private ResponseFormat Login(String data){
+    private ResponseFormat login(String data) {
 
         // get user
-        String user = this.userJsonFromString(data);
+        String user = userJsonFromString(data);
 
-        RequestFormat req = new RequestFormat(Flags.LOGIN, user);
-        String request = this.g.toJson(req);
+        RequestFormat req = new RequestFormat(Commends.LOGIN, user);
+        String request = gson.toJson(req);
 
         try {
             this.outStream.writeUTF(request);
-            String response = this.inStream.readUTF();
-            ResponseFormat res = this.g.fromJson(response, ResponseFormat.class);
+            String response = inStream.readUTF();
+            ResponseFormat res = gson.fromJson(response, ResponseFormat.class);
             return res;
+        } catch (SocketException i) {
+            this.closeSocket("Server forced to shutdown");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (SocketException i) { this.closeSocket("Server forced to shutdown"); }
-        catch (IOException e) { e.printStackTrace(); }
 
         return null;
     }
 
-    private String userJsonFromString(String data){
+    private String userJsonFromString(String data) {
         int index = data.indexOf(' ');
         String username = data.substring(0, index);
         String password = data.substring(index + 1);
 
         String encryptedPass = "";
-        try { encryptedPass = Encryptor.encryptPass(password); }
-        catch (NoSuchAlgorithmException e) { e.printStackTrace(); }
+        try {
+            encryptedPass = Encryptor.encryptPass(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
-        User u = new User(username, encryptedPass);
-        return this.g.toJson(u);
+        User user = new User(username, encryptedPass);
+        return gson.toJson(user);
     }
 }

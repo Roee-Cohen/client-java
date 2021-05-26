@@ -6,8 +6,18 @@ public class User implements Serializable {
 
     private String username;
     private String password;
+    private static User applicationUser;
 
-    public User(String username, String password){
+
+    public static User getApplicationUser() {
+        return applicationUser;
+    }
+
+    public static void setApplicationUser(User applicationUser) {
+        User.applicationUser = applicationUser;
+    }
+
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
