@@ -38,10 +38,11 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passwordEdit.getText().toString();
         String passwordConfirm = passwordConfirmEdit.getText().toString();
 
-        if(password.equals(passwordConfirm)) {
+        if (password.equals(passwordConfirm)) {
             String[] args = {Commends.REGISTER.name(), username + " " + password};
             ClientHandler.getInstance().setContext(this);
-            ClientHandler.getInstance().execute(args);
+            if (ClientHandler.canRun)
+                ClientHandler.getInstance().execute(args);
         } else {
             Toast.makeText(this, "Passwords don't match!", Toast.LENGTH_SHORT).show();
         }

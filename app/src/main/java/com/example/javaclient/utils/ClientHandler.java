@@ -18,6 +18,7 @@ import java.io.IOException;
 public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
 
     private static ClientHandler clientHandler;
+    public static boolean canRun = true;
     private Context context;
     private Commends currentFlag;
 
@@ -40,6 +41,7 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
         Context context = this.context;
         clientHandler = ClientHandler.getInstance();
         this.context = context;
+        canRun = true;
     }
 
     public void setContext(Context context) {
@@ -68,6 +70,10 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
                                 data = Client.getInstance().getGson().fromJson(jsonBody, ResponseFormat.class).data;
                                 message = Client.getInstance().getGson().fromJson(jsonBody, Message.class);
                                 if (message.getMessage() == null) {
+                                    if (data.equals("bye")){
+                                        ((MainScreenActivity)context).finish();
+                                        System.exit(0);
+                                    }
                                     try {
                                         contacts = Client.getInstance().getGson().fromJson(data, String[].class);
                                     } catch (Exception e) {
@@ -155,6 +161,7 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
 
     @Override
     protected ResponseFormat doInBackground(String... voids) {
+        canRun = false;
         Commends flag = Commends.valueOf(voids[0].toUpperCase());
         currentFlag = flag;
         String secondArg = voids[1];

@@ -8,4 +8,7 @@
     <item android:id="@+id/itemNewChat"
         android:title="New Chat" />
 
+    <item android:id="@+id/itemTurnOff"
+        android:title="turn Off" />
+
 </menu>

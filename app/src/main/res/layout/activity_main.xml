@@ -71,17 +71,6 @@
                 android:paddingLeft="10dp"
                 android:singleLine="true" />
 
-            <CheckBox
-                android:id="@+id/checkBoxRememberMeLgin"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_below="@+id/edtPassLogin"
-                android:layout_marginTop="10dp"
-                android:buttonTint="@color/colorText"
-                android:text="Remember me"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
-
         </RelativeLayout>
 
         <RelativeLayout

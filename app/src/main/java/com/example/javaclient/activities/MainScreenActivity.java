@@ -24,6 +24,8 @@ import com.example.javaclient.utils.CircleImageView;
 import com.example.javaclient.utils.Client;
 import com.example.javaclient.utils.ClientHandler;
 import com.example.javaclient.utils.Commends;
+import com.example.javaclient.utils.RequestFormat;
+import com.example.javaclient.utils.ResponseFormat;
 import com.example.javaclient.utils.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +33,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,8 +43,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     private final int PICK_IMAGE = 1;
 
-    private Intent intent;
-    private ImageView imgMenu, imgSearch;
+    private ImageView imgMenu;
     private CircleImageView profileImage;
     private RecyclerView recyclerContacts;
 
@@ -53,16 +56,10 @@ public class MainScreenActivity extends AppCompatActivity {
 
     private static User user;
 
-    public static User getUser(){
-        return user;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
-
-        intent = getIntent();
 
         user = User.getApplicationUser();
 
@@ -90,8 +87,6 @@ public class MainScreenActivity extends AppCompatActivity {
                         User.getApplicationUser().getUsername());
             }
         }).start();
-//        contacts.add("g");
-//        contacts.add("s");
         adapterContacts = new AdapterContacts(contacts, this);
         recyclerContacts.setHasFixedSize(true);
         recyclerContacts.setLayoutManager(new LinearLayoutManager(this));
@@ -107,12 +102,11 @@ public class MainScreenActivity extends AppCompatActivity {
                 showMenu(v);
             }
         });
-        imgSearch = view.findViewById(R.id.imgMainScreenSearch);
         recyclerContacts = view.findViewById(R.id.recyclerChats);
         profileImage = view.findViewById(R.id.imgProfileBtn);
 
         //Try and load existing profile image
-//        StorageReference reference = storageReference.child("profiles/" + clientHandler.getCurrentUser().getUsername());
+//        StorageReference reference = storageReference.child("profiles/" + User.getApplicationUser().getUsername());
 //        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
 //            @Override
 //            public void onSuccess(Uri uri) {
@@ -140,6 +134,9 @@ public class MainScreenActivity extends AppCompatActivity {
                         break;
                     case R.id.itemNewChat:
                         showNewChatDialog();
+                        break;
+                    case R.id.itemTurnOff:
+                        bye();
                         break;
                 }
                 return true;
@@ -226,5 +223,26 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ClientHandler.getInstance().setContext(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        bye();
+    }
+
+    private void bye(){
+        new Thread(new Runnable() {
+
+            RequestFormat requestFormat;
+
+            @Override
+            public void run() {
+                synchronized (this) {
+                    requestFormat = new RequestFormat(Commends.LOG_OUT, User.getApplicationUser().getUsername());
+                    Client.getInstance().execCommand(Commends.LOG_OUT,
+                            Client.getInstance().getGson().toJson(requestFormat));
+                }
+            }
+        }).start();
     }
 }

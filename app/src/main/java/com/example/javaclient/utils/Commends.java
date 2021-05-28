@@ -4,13 +4,10 @@ public enum Commends {
     CREATE("User has been created!"),
     LOAD_MESSAGES("Messages has been loaded!"),
     LOAD_CONTACTS("Contacts has been loaded!"),
-    UPDATE("Data has been updated!"),
-    DELETE("Data has been deleted!"),
-    SHUTDOWN("Shutdown!"),
     LOGIN("You have logged in!"),
     REGISTER("User has been registered!"),
     MESSAGE(" Message has been sent!"),
-    CHAT(" Chat has been created!");
+    LOG_OUT("Bye");
 
     private String message;
 

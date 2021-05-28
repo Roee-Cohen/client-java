@@ -82,8 +82,23 @@ public class Client {
             getChatMessages(data);
         if (command.equals(Commends.LOAD_CONTACTS))
             getContacts(data);
+        if (command.equals(Commends.LOG_OUT))
+            sendBye(data);
 
         return null;
+    }
+
+    private void sendBye(String data) {
+        RequestFormat req = new RequestFormat(Commends.LOG_OUT, data);
+        String request = gson.toJson(req);
+
+        try {
+            this.outStream.writeUTF(request);
+        } catch (SocketException i) {
+            this.closeSocket("Server forced to shutdown");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void getChatMessages(String data) {

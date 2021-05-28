@@ -23,7 +23,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private SharedPreferences storage;
     private EditText usernameEdit, passwordEdit;
-    private CheckBox rememberMeBox;
     private Button btnLogin;
     private Intent intent;
 
@@ -32,13 +31,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        intent = new Intent(this, MainScreenActivity.class);
-//        startActivity(intent);
-
         storage = getApplicationContext().getSharedPreferences("Storage", Context.MODE_PRIVATE);
         usernameEdit = findViewById(R.id.edtUsername);
         passwordEdit = findViewById(R.id.edtPassLogin);
-        rememberMeBox = findViewById(R.id.checkBoxRememberMeLgin);
         btnLogin = findViewById(R.id.btnLogin);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -50,25 +45,19 @@ public class LoginActivity extends AppCompatActivity {
                 showTopToast("Welcome back, " + username + "!");
             }
         });
-
-        rememberMeBox.setChecked(storage.getBoolean("remember_me", false));
-        if(rememberMeBox.isChecked()) {
-            String username = storage.getString("username", "");
-            String password = storage.getString("password", "");
-            commitLogin(username, password);
-        }
     }
 
     private void showTopToast(String message) {
-        Toast toast= Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
         toast.show();
     }
 
     private void commitLogin(String username, String password) {
         String[] args = {Commends.LOGIN.name(), username + " " + password};
         ClientHandler.getInstance().setContext(this);
-        ClientHandler.getInstance().execute(args);
+        if (ClientHandler.canRun)
+            ClientHandler.getInstance().execute(args);
     }
 
     public void onLoginClick(View view) {
@@ -76,10 +65,6 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordEdit.getText().toString();
 
         commitLogin(username, password);
-
-        SharedPreferences.Editor editor = storage.edit();
-        editor.putBoolean("remember_me", rememberMeBox.isChecked());
-        editor.commit();
     }
 
     public void onRegisterClick(View view) {
