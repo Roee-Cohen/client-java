@@ -23,6 +23,7 @@ import com.example.javaclient.adapters.AdapterContacts;
 import com.example.javaclient.utils.CircleImageView;
 import com.example.javaclient.utils.Client;
 import com.example.javaclient.utils.ClientHandler;
+import com.example.javaclient.utils.Commends;
 import com.example.javaclient.utils.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,7 +48,7 @@ public class MainScreenActivity extends AppCompatActivity {
     public StorageReference storageReference;
     public Uri filePath;
 
-    private ArrayList<User> contacts;
+    private ArrayList<String> contacts;
     private AdapterContacts adapterContacts;
 
     private static User user;
@@ -82,8 +83,15 @@ public class MainScreenActivity extends AppCompatActivity {
 
     private void configureRecyclerContacts() {
         contacts = new ArrayList();
-        contacts.add(new User("g", "g"));
-        contacts.add(new User("s", "s"));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Client.getInstance().execCommand(Commends.LOAD_CONTACTS,
+                        User.getApplicationUser().getUsername());
+            }
+        }).start();
+//        contacts.add("g");
+//        contacts.add("s");
         adapterContacts = new AdapterContacts(contacts, this);
         recyclerContacts.setHasFixedSize(true);
         recyclerContacts.setLayoutManager(new LinearLayoutManager(this));
@@ -144,6 +152,11 @@ public class MainScreenActivity extends AppCompatActivity {
         new BroadcastOrNewChatDialog(this, false).show();
     }
 
+    public void createNewChat(String username) {
+        contacts.add(username);
+        adapterContacts.notifyDataSetChanged();
+    }
+
     private void showBroadcastDialog() {
         new BroadcastOrNewChatDialog(this, true).show();
     }
@@ -191,5 +204,27 @@ public class MainScreenActivity extends AppCompatActivity {
             filePath = data.getData();
             uploadImageToFirebase();
         }
+    }
+
+    public void updateContacts(String[] contacts) {
+        for (int i = 0; i < contacts.length; i++) {
+            this.contacts.add(contacts[i]);
+        }
+        adapterContacts.notifyDataSetChanged();
+    }
+
+    public void addContactsIfNeeded(String name){
+        for (int i = 0; i < contacts.size(); i++) {
+            if(contacts.get(i).equals(name))
+                return;
+        }
+        contacts.add(name);
+        adapterContacts.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ClientHandler.getInstance().setContext(this);
     }
 }

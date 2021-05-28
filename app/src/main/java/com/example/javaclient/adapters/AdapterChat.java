@@ -12,19 +12,19 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javaclient.R;
-import com.example.javaclient.utils.MessagePacket;
+import com.example.javaclient.utils.Message;
 import com.example.javaclient.utils.User;
 
 import java.util.List;
 
 public class AdapterChat extends RecyclerView.Adapter<AdapterChat.PlaceHolder> {
 
-    private List<MessagePacket> messageChatList;
+    private List<Message> messageChatList;
     private LayoutInflater layoutInflater;
     private Context context;
 
 
-    public AdapterChat(List<MessagePacket> messageChats, Context context) {
+    public AdapterChat(List<Message> messageChats, Context context) {
         this.messageChatList = messageChats;
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
@@ -56,22 +56,22 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.PlaceHolder> {
     @Override
     public void onBindViewHolder(final PlaceHolder holder, final int position) {
 
-        final MessagePacket message = messageChatList.get(position);
-        holder.txtName.setText(message.getSender());
-        holder.txtMessageBody.setText(message.getContent());
-        holder.txtTime.setText("12:00");
+        final Message message = messageChatList.get(position);
+        holder.txtName.setText(message.getMessage().getSender());
+        holder.txtMessageBody.setText(message.message.getContent());
+        holder.txtTime.setText(message.getDate());
 //        holder.txtTime.setText(message.getTime()); //TODO save the time of the message (with timestamp of course)
-        User user = new User("test", "test");
+//        User user = new User("test", "test");
 //        User user = SharedPreferencesHelper.getInstance(context).getUser(); //TODO save the user in shared preferences
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, message.getContent().length()+"", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, message.getMessage().getContent().length()+"", Toast.LENGTH_SHORT).show();
             }
         });
 
-        if (message.getSender().equals(user.getUsername())) {
+        if (message.getMessage().getSender().equals(User.getApplicationUser().getUsername())) {
 
             RelativeLayout.LayoutParams paramsText = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             paramsText.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -87,7 +87,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.PlaceHolder> {
             holder.relativeLayoutContainerBody.setLayoutParams(relativeParams);
 
 
-            if (message.getContent().length()>=28){
+            if (message.getMessage().getContent().length()>=28){
                 RelativeLayout.LayoutParams paramsText3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramsText3.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 paramsText3.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -116,7 +116,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.PlaceHolder> {
             relativeParams.setMargins(0, 0, 80, 0);  // left, top, right, bottom
             holder.relativeLayoutContainerBody.setLayoutParams(relativeParams);
 
-            if (message.getContent().length()>=28){
+            if (message.getMessage().getContent().length()>=28){
                 RelativeLayout.LayoutParams paramsText3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramsText3.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 paramsText3.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);

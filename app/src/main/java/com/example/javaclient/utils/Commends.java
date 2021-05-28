@@ -3,7 +3,7 @@ package com.example.javaclient.utils;
 public enum Commends {
     CREATE("User has been created!"),
     LOAD_MESSAGES("Messages has been loaded!"),
-    LOAD_CHATS("Chats has been loaded!"),
+    LOAD_CONTACTS("Contacts has been loaded!"),
     UPDATE("Data has been updated!"),
     DELETE("Data has been deleted!"),
     SHUTDOWN("Shutdown!"),

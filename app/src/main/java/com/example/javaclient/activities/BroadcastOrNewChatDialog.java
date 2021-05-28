@@ -14,6 +14,7 @@ import com.example.javaclient.utils.ClientHandler;
 
 class BroadcastOrNewChatDialog extends Dialog {
 
+    private Context context;
     private boolean isBroadcast;
 
     private EditText edtMessageBroadcastOrNewChatName;
@@ -21,6 +22,7 @@ class BroadcastOrNewChatDialog extends Dialog {
 
     public BroadcastOrNewChatDialog(@NonNull Context context, boolean isBroadcast) {
         super(context);
+        this.context = context;
         this.isBroadcast = isBroadcast;
     }
 
@@ -46,7 +48,7 @@ class BroadcastOrNewChatDialog extends Dialog {
     }
 
     private void createNewChat(String username) {
-        ClientHandler.getInstance().createNewChat(MainScreenActivity.getUser().getUsername(), username);
+        ((MainScreenActivity)context).createNewChat(username);
     }
 
     private void sendBroadcast(String message) {

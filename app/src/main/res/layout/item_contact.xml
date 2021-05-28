@@ -18,17 +18,8 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:layout_toRightOf="@+id/imgProfile"
-        android:layout_toLeftOf="@+id/imgConnected"
         android:layout_marginHorizontal="3dp"
         android:textColor="#000"
         android:textSize="20sp"/>
-
-    <ImageView
-        android:id="@+id/imgConnected"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/connected"/>
 
 </RelativeLayout>

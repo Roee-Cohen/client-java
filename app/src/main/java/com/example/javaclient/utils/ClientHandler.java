@@ -14,12 +14,10 @@ import com.example.javaclient.activities.MainScreenActivity;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
 
     private static ClientHandler clientHandler;
-    private Client client;
     private Context context;
     private Commends currentFlag;
 
@@ -35,30 +33,26 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
         return clientHandler;
     }
 
-//    private void resetClientHandler() {
-//        if (clientHandler != null)
-//            clientHandler.cancel(true);
-//        clientHandler = ClientHandler.getInstance();
-//        clientHandler.setContext(context);
-//        clientHandler.setClient(client);
-//        clientHandler.setCurrentUser(User.getApplicationUser());
-//    }
-
-    public void setContext(Context context) {
+    private void resetClientHandler() {
+        if (clientHandler != null) {
+            clientHandler = null;
+        }
+        Context context = this.context;
+        clientHandler = ClientHandler.getInstance();
         this.context = context;
     }
 
-    public void stopListening() {
-        if (messageThread != null)
-            messageThread.stop();
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public void startListening() {
         messageThread = new Thread(new Runnable() {
 
             String data;
-            MessagePacket responseMessagePacket;
+            Message message;
             Message[] messages;
+            String[] contacts;
             String jsonBody;
             Handler handler = new Handler();
 
@@ -68,38 +62,54 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
                     try {
                         Thread.sleep(1000);
                         try {
-                            jsonBody = client.getInputStream().readUTF();
+                            jsonBody = Client.getInstance().getInputStream().readUTF();
                             System.out.println("BODY JSON!!!!!: " + jsonBody);
                             try {
-                                data = client.getGson().fromJson(jsonBody, ResponseFormat.class).data;
-                                responseMessagePacket = client.getGson().fromJson(jsonBody, Message.class).getMsg();
-                                if (responseMessagePacket == null) {
-                                    messages = client.getGson().fromJson(data, Message[].class);
+                                data = Client.getInstance().getGson().fromJson(jsonBody, ResponseFormat.class).data;
+                                message = Client.getInstance().getGson().fromJson(jsonBody, Message.class);
+                                if (message.getMessage() == null) {
+                                    try {
+                                        contacts = Client.getInstance().getGson().fromJson(data, String[].class);
+                                    } catch (Exception e) {
+                                        messages = Client.getInstance().getGson().fromJson(data, Message[].class);
+                                    }
                                 }
-                                if ((responseMessagePacket != null && responseMessagePacket.content != null
-                                        && responseMessagePacket.content != "null") || messages != null) {
+                                if (message.getMessage() != null || messages != null || contacts != null) {
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (responseMessagePacket != null) {
-                                                if (responseMessagePacket.msgPurpose.equals(MessagePurpose.BROADCAST)) {
-                                                    new AlertDialog.Builder(context)
-                                                            .setTitle("Broadcast")
-                                                            .setMessage(responseMessagePacket.content)
-                                                            .setPositiveButton("OK", null).show();
+                                            if (message.getMessage() != null) {
+                                                if (message.getMessage().msgPurpose.equals(MessagePurpose.BROADCAST)) {
+                                                    if (!message.getMessage().getSender().equals(User.getApplicationUser().getUsername()))
+                                                        new AlertDialog.Builder(context)
+                                                                .setTitle("Broadcast From " + message.getMessage().getSender())
+                                                                .setMessage(message.getMessage().content)
+                                                                .setPositiveButton("OK", null).show();
                                                 } else {
-                                                    if (context instanceof ChatActivity)
-                                                        if (((ChatActivity) context).getUser().getUsername().equals(responseMessagePacket.getSender()))
-                                                            ((ChatActivity) context).updateChat(responseMessagePacket);
-                                                        else
+                                                    if (context instanceof ChatActivity) {
+                                                        if (((ChatActivity) context).getUser().equals(message.getMessage().getSender()))
+                                                            ((ChatActivity) context).updateChat(message);
+                                                        else {
                                                             new AlertDialog.Builder(context)
-                                                                    .setTitle("Message From " + responseMessagePacket.getSender())
-                                                                    .setMessage(responseMessagePacket.content)
+                                                                    .setTitle("Message From " + message.getMessage().getSender())
+                                                                    .setMessage(message.getMessage().content)
                                                                     .setPositiveButton("OK", null).show();
+                                                            if (context instanceof MainScreenActivity)
+                                                                ((MainScreenActivity) context).addContactsIfNeeded(message.getMessage().getSender());
+                                                        }
+                                                    } else {
+                                                        new AlertDialog.Builder(context)
+                                                                .setTitle("Message From " + message.getMessage().getSender())
+                                                                .setMessage(message.getMessage().content)
+                                                                .setPositiveButton("OK", null).show();
+                                                    }
                                                 }
-                                            } else {
+                                            } else if (messages != null) {
                                                 if (context instanceof ChatActivity)
                                                     ((ChatActivity) context).updateChat(messages);
+                                            } else {
+                                                if (context instanceof MainScreenActivity)
+                                                    ((MainScreenActivity) context).updateContacts(contacts);
                                             }
                                         }
                                     }, 500);
@@ -132,18 +142,15 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
                 synchronized (this) {
                     messagePacket = new MessagePacket(User.getApplicationUser().getUsername(), message, "evreybody",
                             MessageType.MESSAGE, MessagePurpose.BROADCAST);
-                    requestFormat = new RequestFormat(Commends.MESSAGE, client.getGson().toJson(messagePacket));
-                    responseFormat = client.execCommand(Commends.MESSAGE, client.getGson().toJson(requestFormat));
-                    System.out.println(client.getGson().toJson(messagePacket) + "");
+                    requestFormat = new RequestFormat(Commends.MESSAGE, Client.getInstance().getGson().toJson(messagePacket));
+                    responseFormat = Client.getInstance().execCommand(Commends.MESSAGE,
+                            Client.getInstance().getGson().toJson(requestFormat));
+                    System.out.println(Client.getInstance().getGson().toJson(messagePacket) + "");
                 }
             }
         });
 
         sendingThread.start();
-    }
-
-    public void createNewChat(String sender, String destination) {
-
     }
 
     @Override
@@ -157,13 +164,14 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
             User user = new User(username, password);
             User.setApplicationUser(user);
         }
-        client = Client.getInstance();
-        ResponseFormat response = client.execCommand(flag, secondArg);
+        Client.getInstance();
+        ResponseFormat response = Client.getInstance().execCommand(flag, secondArg);
         return response;
     }
 
     @Override
     protected void onPostExecute(ResponseFormat response) {
+        resetClientHandler();
         com.example.javaclient.utils.Status status = response.status;
         if (status.equals(com.example.javaclient.utils.Status.OK)) {
             Toast.makeText(context, currentFlag.getMessage(), Toast.LENGTH_SHORT).show();
@@ -175,8 +183,6 @@ public class ClientHandler extends AsyncTask<String, Void, ResponseFormat> {
         } else {
             Toast.makeText(context, "There seems to be an error connection!", Toast.LENGTH_SHORT).show();
         }
-
-//        resetClientHandler();
     }
 
     private void makeAction(Commends flag) {

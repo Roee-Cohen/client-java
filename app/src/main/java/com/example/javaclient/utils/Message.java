@@ -2,27 +2,23 @@ package com.example.javaclient.utils;
 
 public class Message {
 
-    public MessagePacket msg;
+    public MessagePacket message;
     public String date;
 
-    public Message(MessagePacket msg, String date){
-        this.msg = msg;
+    public Message(MessagePacket message, String date){
+        this.message = message;
         this.date = date;
     }
 
-    public MessagePacket getMsg() {
-        return msg;
-    }
-
-    public void setMsg(MessagePacket msg) {
-        this.msg = msg;
+    public MessagePacket getMessage() {
+        return message;
     }
 
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setMessage(MessagePacket message) {
+        this.message = message;
     }
 }

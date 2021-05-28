@@ -80,6 +80,8 @@ public class Client {
             return login(data);
         if (command.equals(Commends.LOAD_MESSAGES))
             getChatMessages(data);
+        if (command.equals(Commends.LOAD_CONTACTS))
+            getContacts(data);
 
         return null;
     }
@@ -87,6 +89,20 @@ public class Client {
     private void getChatMessages(String data) {
 
         RequestFormat req = new RequestFormat(Commends.LOAD_MESSAGES, data);
+        String request = gson.toJson(req);
+
+        try {
+            this.outStream.writeUTF(request);
+        } catch (SocketException i) {
+            this.closeSocket("Server forced to shutdown");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getContacts(String data) {
+
+        RequestFormat req = new RequestFormat(Commends.LOAD_CONTACTS, data);
         String request = gson.toJson(req);
 
         try {

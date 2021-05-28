@@ -25,13 +25,14 @@ import com.example.javaclient.utils.User;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private User user, me = User.getApplicationUser();
+    private String user, me = User.getApplicationUser().getUsername();
     private ImageView imgSend;
     private EditText edtMessage;
-    private ArrayList<MessagePacket> messages = new ArrayList<>();
+    private ArrayList<Message> messages = new ArrayList<>();
     private AdapterChat adapterChat;
     private RecyclerView recyclerViewChats;
 
@@ -40,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        user = (User) getIntent().getSerializableExtra("USER");
+        user = getIntent().getStringExtra("USERNAME");
         loadViews(this);
         configureRecyclerContacts();
         ClientHandler.getInstance().setContext(this);
@@ -51,7 +52,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Client.getInstance().execCommand(Commends.LOAD_MESSAGES,
-                        me.getUsername()+","+user.getUsername());
+                        me + "," + user);
             }
         }).start();
         adapterChat = new AdapterChat(messages, this);
@@ -66,11 +67,13 @@ public class ChatActivity extends AppCompatActivity {
         imgSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessagePacket messagePacket = new MessagePacket(me.getUsername(), edtMessage.getText().toString(), user.getUsername(),
-                        MessageType.MESSAGE, MessagePurpose.UNICAST);
-                sendMessage(messagePacket);
-                messages.add(messagePacket);
+                Date date = new Date();
+                Message message = new Message(new MessagePacket(me, edtMessage.getText().toString(), user,
+                        MessageType.MESSAGE, MessagePurpose.UNICAST), date.getHours() + ":" + date.getMinutes());
+                sendMessage(message.getMessage());
+                messages.add(message);
                 adapterChat.notifyDataSetChanged();
+                edtMessage.setText("");
             }
         });
         edtMessage = view.findViewById(R.id.edtMessage);
@@ -95,18 +98,18 @@ public class ChatActivity extends AppCompatActivity {
         }).start();
     }
 
-    public User getUser(){
+    public String getUser(){
         return user;
     }
 
     public void updateChat(Message[] messages) {
         for (int i = 0; i < messages.length; i++) {
-            this.messages.add(messages[i].getMsg());
+            this.messages.add(messages[i]);
         }
         adapterChat.notifyDataSetChanged();
     }
 
-    public void updateChat(MessagePacket message) {
+    public void updateChat(Message message) {
         messages.add(message);
         adapterChat.notifyDataSetChanged();
     }
